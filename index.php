@@ -171,64 +171,73 @@ $best_price_flight_length = count($arr);
 </head>
 <body>
   <div class="container mt-5">
+    
 
 <form action="index.php" method="post">
   
    <div>Scegli un aereoporto di partenza</div>
     <select name="departure" id="departure">
-    <?php
-     foreach($airportsArray as $airport) {
-    ?>
-	    <option value="<?php echo $airport->code ?>"><?php echo $airport->name ?></option>
-    <?php
-     }
-     ?>
+        <?php
+        foreach($airportsArray as $airport) {
+        ?>
+            <option value="<?php echo $airport->code ?>"><?php echo $airport->name ?></option>
+        <?php
+        }
+        ?>
 	  </select>
       <script type="text/javascript">
         document.getElementById('departure').value = "<?php echo $_GET['departure'];?>";
      </script>
 
       <div>Scegli un aereoporto di arrivo</div>
-    <select name="arrival" id="arrival">
-    <?php
-    foreach($airportsArray as $airport) {
-    ?>
-	    <option value="<?php echo $airport->code ?>"><?php echo $airport->name ?></option>
-    <?php
-     }
-     ?>
-	  </select>
+        <select name="arrival" id="arrival">
+            <?php
+            foreach($airportsArray as $airport) {
+            ?>
+                <option value="<?php echo $airport->code ?>"><?php echo $airport->name ?></option>
+            <?php
+            }
+            ?>
+        </select>
       <script type="text/javascript">
         document.getElementById('arrival').value = "<?php echo $_GET['arrival'];?>";
      </script>
-
-
+     
 <input type="submit" name="submit" value="Invia"/>
 <hr>
 
+<div style="visibility:
+         <?php if ($user_departure_name == $user_arrival_name ) {
+                  echo "hidden;";
+                } else {
+                  echo "visible;";
+                } ?>
+         ;">
 <p>Partenza da: <?php echo $user_departure_name ?></p>
 <p>Arrivo a: <?php echo $user_arrival_name ?> </p>
 <p>La distanza tra i due aereoporti è di <?php echo getDistanceBetweenPointsNew($arrival_lng,$arrival_lat,$departure_lng,$departure_lat). ' km'; ?></p>
  </form>
       <table id="mytable" class="table mt-5" style="visibility:
-         <?php if ($selected) {
-                  echo "visible;";
-                } else {
+         <?php if ($user_departure_name == $user_arrival_name ) {
                   echo "hidden;";
+                } else {
+                  echo "visible;";
                 } ?>
          ;">
-    <h3>Miglior prezzo: <?php echo $best_price_flight->price?> &euro;</h3>
-    <h3>Numero Scali: 
+     <h3>Miglior prezzo: <?php echo $best_price_flight->price?> &euro;</h3>
+     <h3>Numero Scali: 
         <?php 
            if ($best_price_flight_length == 3){
               echo "0";
            }
            if ($best_price_flight_length == 5 ){
             echo "1";
-         }if ($best_price_flight_length == 7 ){
+           }if ($best_price_flight_length == 7 ){
             echo "2";
-         }
-        ?> </h3>      
+           }
+        ?>
+     </h3>      
+</div>
   <thead>
     <tr>
       <th scope="col">Partenza</th>
