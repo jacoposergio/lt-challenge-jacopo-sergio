@@ -1,5 +1,7 @@
 <?php
 
+$selected = "Seleziona un aereoporto"; 
+
 require_once __DIR__ . '/Airport.php';
 require_once __DIR__ . '/Flight.php';
 require_once __DIR__ . '/Data.php';
@@ -11,6 +13,17 @@ require_once __DIR__ . '/Distance.php';
 if (isset($_POST['submit'])) { 
     $user_departure = $_POST['departure'];
     $user_arrival = $_POST['arrival'];
+ }
+
+ //creo le variabili per stampare i dati del viaggio
+
+ foreach($airportsArray as $airport) {
+    if($user_departure === $airport->code){
+       $user_departure_name = $airport->name;
+    }
+    if($user_arrival === $airport->code){
+        $user_arrival_name = $airport->name;
+     }
  }
 
 // ricavo latitudine e longitudine degli aereoporti
@@ -131,6 +144,20 @@ foreach($secondRouteArray as $secondRoute){
     }
 }
 
+//creo un array con tutti i voli trovati
+$final_array = array_merge($oneStopoverArray, $twoStopoverArray);
+array_push($final_array, $userFlight);
+
+//ordino i voli in base al prezzo puù basso
+usort($final_array, function($a, $b) {
+    return ($a->price - $b->price) ;
+});
+
+$best_price_flight = $final_array[0];
+
+$arr = (array)$best_price_flight;
+$best_price_flight_length = count($arr);
+
 ?>
 
 <!DOCTYPE html>
@@ -148,18 +175,21 @@ foreach($secondRouteArray as $secondRoute){
 <form action="index.php" method="post">
   
    <div>Scegli un aereoporto di partenza</div>
-    <select name="departure">
+    <select name="departure" id="departure">
     <?php
-    foreach($airportsArray as $airport) {
+     foreach($airportsArray as $airport) {
     ?>
 	    <option value="<?php echo $airport->code ?>"><?php echo $airport->name ?></option>
     <?php
      }
      ?>
 	  </select>
+      <script type="text/javascript">
+        document.getElementById('departure').value = "<?php echo $_GET['departure'];?>";
+     </script>
 
       <div>Scegli un aereoporto di arrivo</div>
-    <select name="arrival">
+    <select name="arrival" id="arrival">
     <?php
     foreach($airportsArray as $airport) {
     ?>
@@ -168,12 +198,37 @@ foreach($secondRouteArray as $secondRoute){
      }
      ?>
 	  </select>
+      <script type="text/javascript">
+        document.getElementById('arrival').value = "<?php echo $_GET['arrival'];?>";
+     </script>
 
-      <p>La distanza tra i due aereoporti è di <?php echo getDistanceBetweenPointsNew($arrival_lng,$arrival_lat,$departure_lng,$departure_lat). ' km'; ?></p>
 
-      <input type="submit" name="submit" value="Invia"/>
+<input type="submit" name="submit" value="Invia"/>
+<hr>
 
-      <table id="mytable" class="table mt-5" style="visibility:visible;">
+<p>Partenza da: <?php echo $user_departure_name ?></p>
+<p>Arrivo a: <?php echo $user_arrival_name ?> </p>
+<p>La distanza tra i due aereoporti è di <?php echo getDistanceBetweenPointsNew($arrival_lng,$arrival_lat,$departure_lng,$departure_lat). ' km'; ?></p>
+ </form>
+      <table id="mytable" class="table mt-5" style="visibility:
+         <?php if ($selected) {
+                  echo "visible;";
+                } else {
+                  echo "hidden;";
+                } ?>
+         ;">
+    <h3>Miglior prezzo: <?php echo $best_price_flight->price?> &euro;</h3>
+    <h3>Numero Scali: 
+        <?php 
+           if ($best_price_flight_length == 3){
+              echo "0";
+           }
+           if ($best_price_flight_length == 5 ){
+            echo "1";
+         }if ($best_price_flight_length == 7 ){
+            echo "2";
+         }
+        ?> </h3>      
   <thead>
     <tr>
       <th scope="col">Partenza</th>
@@ -200,7 +255,7 @@ foreach($secondRouteArray as $secondRoute){
             <td></td>
             <td><?php echo $singleFlight->code_stop_arrival ?></td>
             <td><?php echo $singleFlight->price ?> &euro;</td>
-        </tr>
+    </tr>
         <?php
         }
         ?>
@@ -221,7 +276,6 @@ foreach($secondRouteArray as $secondRoute){
     </tr>
   </tbody>
 </table>
-  </div>
-      
+  </div>  
 </body>
 </html>
