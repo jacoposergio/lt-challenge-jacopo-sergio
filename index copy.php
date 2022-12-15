@@ -166,136 +166,125 @@ $best_price_flight_length = count($arr);
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" >
-    <link rel="stylesheet" href="style.css" >
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" 
     <title></title>
 </head>
 <body>
   <div class="container mt-5">
     
-    <h1>Trova il tuo volo al miglior prezzo!</h1>
 
-    <form action="index.php" method="post">
-
-      <div class="select_container">
-        <div>Scegli un aereoporto di partenza</div>
-        <select class="form-select" aria-label="Default select example" name="departure" id="departure">
-            <?php
-              foreach($airportsArray as $airport) {
-              ?>
-                  <option value="<?php echo $airport->code ?>"><?php echo $airport->name ?></option>
-              <?php
-              }
-            ?>
-      </select>
+<form action="index.php" method="post">
+  
+   <div>Scegli un aereoporto di partenza</div>
+    <select name="departure" id="departure">
+        <?php
+        foreach($airportsArray as $airport) {
+        ?>
+            <option value="<?php echo $airport->code ?>"><?php echo $airport->name ?></option>
+        <?php
+        }
+        ?>
+	  </select>
       <script type="text/javascript">
-              document.getElementById('departure').value = "<?php echo $_GET['departure'];?>";
-          </script>
+        document.getElementById('departure').value = "<?php echo $_GET['departure'];?>";
+     </script>
 
       <div>Scegli un aereoporto di arrivo</div>
-        <select class="form-select" aria-label="Default select example" name="arrival" id="arrival">
+        <select name="arrival" id="arrival">
             <?php
-              foreach($airportsArray as $airport) {
-              ?>
-                  <option value="<?php echo $airport->code ?>"><?php echo $airport->name ?></option>
-              <?php
-              }
+            foreach($airportsArray as $airport) {
             ?>
-      </select>
+                <option value="<?php echo $airport->code ?>"><?php echo $airport->name ?></option>
+            <?php
+            }
+            ?>
+        </select>
       <script type="text/javascript">
-              document.getElementById('arrival').value = "<?php echo $_GET['arrival'];?>";
-          </script>
-      </div>
+        document.getElementById('arrival').value = "<?php echo $_GET['arrival'];?>";
+     </script>
+     
+<input type="submit" name="submit" value="Invia"/>
+<hr>
 
-      <input class="ms_btn" type="submit" name="submit" value="Inizia ricerca"/>
-    </form>
-
-    <div style="visibility:
-        <?php if ($user_departure_name == $user_arrival_name ) {
-                echo "hidden;";
-              } else {
-                echo "visible;";
-              } ?>
-    ;">
-
-      <div class="info_container">
-        <h5>Informazioni volo</h4>
-        <div class="ms_info">Partenza da: <?php echo $user_departure_name ?></div>
-        <div class="ms_info">Arrivo a: <?php echo $user_arrival_name ?> </p>
-        <div class="ms_info">La distanza tra i due aereoporti è di <?php echo getDistanceBetweenPointsNew($arrival_lng,$arrival_lat,$departure_lng,$departure_lat). ' km'; ?></p>
-        <div class="best-price-container d-flex ">
-          <h3>Miglior prezzo: <span><?php echo $best_price_flight->price?> &euro;</span></h3>
-          <h3>Numero Scali: 
-              <?php 
-                  if ($best_price_flight_length == 3){
-                    echo "0";
-                  }
-                  if ($best_price_flight_length == 5 ){
-                  echo "1";
-                  }if ($best_price_flight_length == 7 ){
-                  echo "2";
-                  }
-              ?>
-            </h3>
-        </div>
-      </div>
-    </div>      
-
-    <table id="mytable" class="table mt-5" style="visibility:
-        <?php if ($user_departure_name == $user_arrival_name ) {
-              echo "hidden;";
-            } else {
-              echo "visible;";
-            } ?>
-      ;">      
-
-      <thead>
-        <tr>
-          <th scope="col">Partenza</th>
-          <th scope="col">Scalo 1</th>
-          <th scope="col">Scalo 2</th>
-          <th scope="col">Arrivo</th>
-          <th scope="col">Prezzo</th>
+<div style="visibility:
+         <?php if ($user_departure_name == $user_arrival_name ) {
+                  echo "hidden;";
+                } else {
+                  echo "visible;";
+                } ?>
+         ;">
+<p>Partenza da: <?php echo $user_departure_name ?></p>
+<p>Arrivo a: <?php echo $user_arrival_name ?> </p>
+<p>La distanza tra i due aereoporti è di <?php echo getDistanceBetweenPointsNew($arrival_lng,$arrival_lat,$departure_lng,$departure_lat). ' km'; ?></p>
+ </form>
+      <table id="mytable" class="table mt-5" style="visibility:
+         <?php if ($user_departure_name == $user_arrival_name ) {
+                  echo "hidden;";
+                } else {
+                  echo "visible;";
+                } ?>
+         ;">
+     <h3>Miglior prezzo: <?php echo $best_price_flight->price?> &euro;</h3>
+     <h3>Numero Scali: 
+        <?php 
+           if ($best_price_flight_length == 3){
+              echo "0";
+           }
+           if ($best_price_flight_length == 5 ){
+            echo "1";
+           }if ($best_price_flight_length == 7 ){
+            echo "2";
+           }
+        ?>
+     </h3>      
+</div>
+  <thead>
+    <tr>
+      <th scope="col">Partenza</th>
+      <th scope="col">Scalo 1</th>
+      <th scope="col">Scalo 2</th>
+      <th scope="col">Arrivo</th>
+      <th scope="col">Prezzo</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><?php echo $user_departure ?></td>
+      <td></td>
+      <td></td>
+      <td><?php echo $user_arrival ?></td>
+      <td><?php echo $user_price ?> &euro; </td>
+    </tr>
+    <tr>
+      <?php
+        foreach($oneStopoverArray as $singleFlight) {
+        ?>
+            <td> <?php echo $singleFlight->code_departure ?></th>
+            <td><?php echo $singleFlight->code_arrival ?></td>
+            <td></td>
+            <td><?php echo $singleFlight->code_stop_arrival ?></td>
+            <td><?php echo $singleFlight->price ?> &euro;</td>
+    </tr>
+        <?php
+        }
+        ?>
+    </tr>
+    <tr>
+      <?php
+        foreach($twoStopoverArray as $singleFlight) {
+        ?>
+            <td> <?php echo $singleFlight->code_departure ?></th>
+            <td><?php echo $singleFlight->code_arrival ?></td>
+            <td><?php echo $singleFlight->code_stop_arrival ?></td>
+            <td><?php echo $singleFlight->code_second_stop_arrival; ?></td>
+            <td><?php echo $singleFlight->price ?> &euro;</td>
         </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><?php echo $user_departure ?></td>
-          <td></td>
-          <td></td>
-          <td><?php echo $user_arrival ?></td>
-          <td><?php echo $user_price ?> &euro; </td>
-        </tr>
-        <tr>
-          <?php
-            foreach($oneStopoverArray as $singleFlight) {
-            ?>
-                <td> <?php echo $singleFlight->code_departure ?></th>
-                <td><?php echo $singleFlight->code_arrival ?></td>
-                <td></td>
-                <td><?php echo $singleFlight->code_stop_arrival ?></td>
-                <td><?php echo $singleFlight->price ?> &euro;</td>
-        </tr>
-            <?php
-            }
-            ?>
-        </tr>
-        <tr>
-          <?php
-            foreach($twoStopoverArray as $singleFlight) {
-            ?>
-                <td> <?php echo $singleFlight->code_departure ?></th>
-                <td><?php echo $singleFlight->code_arrival ?></td>
-                <td><?php echo $singleFlight->code_stop_arrival ?></td>
-                <td><?php echo $singleFlight->code_second_stop_arrival; ?></td>
-                <td><?php echo $singleFlight->price ?> &euro;</td>
-            </tr>
-            <?php
-            }
-            ?>
-        </tr>
-      </tbody>
-    </table>
+        <?php
+        }
+        ?>
+    </tr>
+  </tbody>
+</table>
   </div>  
 </body>
 </html>
