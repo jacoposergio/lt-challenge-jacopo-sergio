@@ -56,6 +56,7 @@ $user_price =  round($user_distance / 3) ;
 }if( $user_distance < 700){
 $user_price =  round($user_distance / 4);
 }
+
 //istanzio l'oggetto $userFlight che sarà quello del volo diretto
 $userFlight = new Flight ( $user_departure, $user_arrival, $user_price);
 
